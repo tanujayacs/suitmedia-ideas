@@ -36,7 +36,7 @@ export interface ApiResponse {
 }
 
 export interface ApiParams {
-  page?: number;
-  size?: number;
-  sort?: 'published_at' | '-published_at';
+  page: number;
+  size: number;
+  sort: 'published_at' | '-published_at';
 }

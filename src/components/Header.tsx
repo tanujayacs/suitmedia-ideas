@@ -2,52 +2,67 @@ import React from 'react';
 import { useScrollDirection } from '../hooks/useScrollDirection';
 
 const Header: React.FC = () => {
-  const { scrollDirection, isScrolled } = useScrollDirection();
+  const scrollDirection = useScrollDirection();
+  
+  const menuItems = [
+    { label: 'Work', href: '#work' },
+    { label: 'About', href: '#about' },
+    { label: 'Services', href: '#services' },
+    { label: 'Ideas', href: '#ideas', active: true },
+    { label: 'Careers', href: '#careers' },
+    { label: 'Contact', href: '#contact' },
+  ];
 
   return (
-    <header 
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ${
         scrollDirection === 'down' ? '-translate-y-full' : 'translate-y-0'
-      } ${
-        isScrolled ? 'bg-suitmedia-orange/90 backdrop-blur-sm' : 'bg-suitmedia-orange'
       }`}
     >
-      <div className="container mx-auto px-6">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <div className="flex items-center">
-            <div className="text-white font-bold text-xl">
-              Suitmedia
+      <div className="bg-white/90 backdrop-blur-sm shadow-sm">
+        <div className="container mx-auto px-4 lg:px-8">
+          <div className="flex items-center justify-between h-20">
+            {/* Logo */}
+            <div className="flex-shrink-0">
+              <img
+                src="/suitmedia-logo.png"
+                alt="Suitmedia"
+                className="h-8"
+              />
             </div>
-          </div>
 
-          {/* Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
-            <a href="#" className="text-white hover:text-orange-100 transition-colors">
-              Work
-            </a>
-            <a href="#" className="text-white hover:text-orange-100 transition-colors">
-              About
-            </a>
-            <a href="#" className="text-white hover:text-orange-100 transition-colors">
-              Services
-            </a>
-            <a href="#" className="text-white bg-white bg-opacity-20 px-4 py-2 rounded hover:bg-opacity-30 transition-colors">
-              Ideas
-            </a>
-            <a href="#" className="text-white hover:text-orange-100 transition-colors">
-              Careers
-            </a>
-            <a href="#" className="text-white hover:text-orange-100 transition-colors">
-              Contact
-            </a>
-          </nav>
+            {/* Navigation */}
+            <nav className="hidden md:flex space-x-8">
+              {menuItems.map((item) => (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  className={`relative text-dark-gray hover:text-orange transition-colors duration-200 ${
+                    item.active ? 'text-orange' : ''
+                  }`}
+                >
+                  {item.label}
+                  {item.active && (
+                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-orange transform translate-y-6"></div>
+                  )}
+                </a>
+              ))}
+            </nav>
 
-          {/* Mobile menu button */}
-          <div className="md:hidden">
-            <button className="text-white hover:text-orange-100">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            {/* Mobile menu button */}
+            <button className="md:hidden p-2">
+              <svg
+                className="w-6 h-6 text-dark-gray"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
               </svg>
             </button>
           </div>

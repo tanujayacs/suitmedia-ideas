@@ -2,28 +2,24 @@ import { useState, useEffect } from 'react';
 
 export const useScrollDirection = () => {
   const [scrollDirection, setScrollDirection] = useState<'up' | 'down'>('up');
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [prevScrollY, setPrevScrollY] = useState(0);
 
   useEffect(() => {
-    let lastScrollY = window.pageYOffset;
-
-    const updateScrollDirection = () => {
-      const scrollY = window.pageYOffset;
-      const direction = scrollY > lastScrollY ? 'down' : 'up';
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
       
-      if (direction !== scrollDirection && (scrollY - lastScrollY > 10 || scrollY - lastScrollY < -10)) {
-        setScrollDirection(direction);
+      if (currentScrollY > prevScrollY && currentScrollY > 100) {
+        setScrollDirection('down');
+      } else if (currentScrollY < prevScrollY || currentScrollY <= 100) {
+        setScrollDirection('up');
       }
       
-      setIsScrolled(scrollY > 50);
-      lastScrollY = scrollY > 0 ? scrollY : 0;
+      setPrevScrollY(currentScrollY);
     };
 
-    window.addEventListener('scroll', updateScrollDirection);
-    return () => {
-      window.removeEventListener('scroll', updateScrollDirection);
-    };
-  }, [scrollDirection]);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [prevScrollY]);
 
-  return { scrollDirection, isScrolled };
+  return scrollDirection;
 };

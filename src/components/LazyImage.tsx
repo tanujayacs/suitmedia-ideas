@@ -4,17 +4,13 @@ interface LazyImageProps {
   src: string;
   alt: string;
   className?: string;
-  placeholder?: string;
+  fallback?: string;
 }
 
-const LazyImage: React.FC<LazyImageProps> = ({ 
-  src, 
-  alt, 
-  className = '', 
-  placeholder = '/api/placeholder/400/250' 
-}) => {
+const LazyImage: React.FC<LazyImageProps> = ({ src, alt, className, fallback = '/card.jpg' }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isInView, setIsInView] = useState(false);
+  const [hasError, setHasError] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
@@ -34,23 +30,35 @@ const LazyImage: React.FC<LazyImageProps> = ({
       observer.observe(imgRef.current);
     }
 
-    return () => {
-      observer.disconnect();
-    };
+    return () => observer.disconnect();
   }, []);
 
+  const handleLoad = () => {
+    setIsLoaded(true);
+  };
+
+  const handleError = () => {
+    setHasError(true);
+    setIsLoaded(true);
+  };
+
   return (
-    <div className={`overflow-hidden ${className}`}>
+    <div className={`relative overflow-hidden ${className}`}>
       <img
         ref={imgRef}
-        src={isInView ? src : placeholder}
+        src={isInView ? (hasError ? fallback : src) : ''}
         alt={alt}
+        onLoad={handleLoad}
+        onError={handleError}
         className={`w-full h-full object-cover transition-opacity duration-300 ${
           isLoaded ? 'opacity-100' : 'opacity-0'
         }`}
-        onLoad={() => setIsLoaded(true)}
-        onError={() => setIsLoaded(true)}
       />
+      {!isLoaded && (
+        <div className="absolute inset-0 bg-gray-200 animate-pulse flex items-center justify-center">
+          <div className="text-gray-400">Loading...</div>
+        </div>
+      )}
     </div>
   );
 };

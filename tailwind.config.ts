@@ -6,11 +6,19 @@ export default {
   ],
   theme: {
     extend: {
-      fontFamily: {
-        'sans': ['Inter', 'system-ui', 'sans-serif'],
-      },
       colors: {
-        'suitmedia-orange': '#ff6b35',
+        'orange': '#FF6B35',
+        'dark-gray': '#4A4A4A',
+        'light-gray': '#F5F5F5',
+      },
+      animation: {
+        'fadeIn': 'fadeIn 0.3s ease-in-out',
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0', transform: 'translateY(-20px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        }
       }
     },
   },
