@@ -6,80 +6,38 @@ interface PaginationProps {
   onPageChange: (page: number) => void;
 }
 
-const Pagination: React.FC<PaginationProps> = ({
-  currentPage,
-  totalPages,
-  onPageChange,
-}) => {
-  const generatePageNumbers = () => {
-    const pages: (number | string)[] = [];
-    const maxVisiblePages = 5;
-    
-    if (totalPages <= maxVisiblePages) {
-      for (let i = 1; i <= totalPages; i++) {
-        pages.push(i);
-      }
-    } else {
-      pages.push(1);
-      
-      if (currentPage > 3) {
-        pages.push('...');
-      }
-      
-      const start = Math.max(2, currentPage - 1);
-      const end = Math.min(totalPages - 1, currentPage + 1);
-      
-      for (let i = start; i <= end; i++) {
-        pages.push(i);
-      }
-      
-      if (currentPage < totalPages - 2) {
-        pages.push('...');
-      }
-      
-      pages.push(totalPages);
-    }
-    
+const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPageChange }) => {
+  const getPageNumbers = () => {
+    const pages: number[] = [];
+
+    const start = Math.max(2, currentPage - 1);
+    const end = Math.min(totalPages - 1, currentPage + 1);
+    pages.push(1);
+    if (start > 2) pages.push(-1);
+    for (let i = start; i <= end; i++) pages.push(i);
+    if (end < totalPages - 1) pages.push(-2);
+    if (totalPages > 1) pages.push(totalPages);
     return pages;
   };
 
   return (
-    <div className="flex justify-center items-center space-x-2 mt-8">
-      {/* Previous Button */}
-      <button
-        onClick={() => onPageChange(currentPage - 1)}
-        disabled={currentPage === 1}
-        className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-      >
-        « Previous
-      </button>
-
-      {/* Page Numbers */}
-      {generatePageNumbers().map((page, index) => (
+    <div className="flex justify-center items-center space-x-2 mt-15">
+      <button onClick={() => onPageChange(1)}>{'«'}</button>
+      <button disabled={currentPage === 1} onClick={() => onPageChange(currentPage - 1)}>{'<'}</button>
+      {getPageNumbers().map((page, i) => (
         <button
-          key={index}
-          onClick={() => typeof page === 'number' && onPageChange(page)}
-          disabled={page === '...'}
+          key={i}
+          disabled={page < 0}
+          onClick={() => page > 0 && onPageChange(page)}
           className={`px-3 py-2 text-sm font-medium rounded-md ${
-            page === currentPage
-              ? 'bg-orange text-white border-orange'
-              : page === '...'
-              ? 'text-gray-400 cursor-default'
-              : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
+            page === currentPage ? 'bg-orange text-white' : 'bg-white text-gray-700 border border-gray-300'
           }`}
         >
-          {page}
+          {page < 0 ? '...' : page}
         </button>
       ))}
-
-      {/* Next Button */}
-      <button
-        onClick={() => onPageChange(currentPage + 1)}
-        disabled={currentPage === totalPages}
-        className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-      >
-        Next »
-      </button>
+      <button disabled={currentPage === totalPages} onClick={() => onPageChange(currentPage + 1)}>{'>'}</button>
+      <button onClick={() => onPageChange(totalPages)}>{'»'}</button>
     </div>
   );
 };

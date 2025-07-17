@@ -4,30 +4,30 @@ const Banner: React.FC = () => {
   const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY);
-    };
-
+    const handleScroll = () => setScrollY(window.scrollY);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
-    <div className="relative h-screen overflow-hidden">
-      {/* Background Image with Parallax */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+    <div className="relative h-screen bg-black overflow-hidden">
+      {/* 1. Gambar Background & Overlay Gelap */}
+      <div
+        className="absolute inset-0"
         style={{
-          backgroundImage: `url('/banner.jpg')`,
           transform: `translateY(${scrollY * 0.5}px)`,
         }}
       >
-        <div className="absolute inset-0 bg-black/40"></div>
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url('/banner.jpg')` }}
+        ></div>
+        <div className="absolute inset-0 bg-black/60"></div>
       </div>
 
-      {/* Content */}
-      <div 
-        className="relative z-10 flex items-center justify-center h-full"
+      {/* 2. Konten Teks di Tengah */}
+      <div
+        className="relative z-10 flex h-full items-center justify-center"
         style={{
           transform: `translateY(${scrollY * 0.3}px)`,
         }}
@@ -38,8 +38,15 @@ const Banner: React.FC = () => {
         </div>
       </div>
 
-      {/* Diagonal Bottom */}
-      <div className="absolute bottom-0 left-0 right-0 h-20 bg-white transform -skew-y-1 origin-bottom-left"></div>
+      {/* 3. Bentuk Putih Miring yang DIAM di Bawah */}
+      <div
+        className="absolute bottom-0 left-0 right-0 z-20 h-[25vh] bg-white"
+        style={{
+          // NILAI DI BAWAH INI YANG DIUBAH
+          clipPath: 'polygon(0 100%, 100% 0, 100% 100%, 0% 100%)',
+        }}
+      ></div>
+
     </div>
   );
 };
