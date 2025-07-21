@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { ApiResponse, ApiParams } from '../types';
 
-const API_BASE_URL = '/api/ideas';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export const fetchIdeas = async (params: ApiParams): Promise<ApiResponse> => {
   const response = await axios.get(API_BASE_URL, {
@@ -12,6 +12,6 @@ export const fetchIdeas = async (params: ApiParams): Promise<ApiResponse> => {
       'sort': params.sort,
     },
   });
-  
+
   return response.data;
 };
